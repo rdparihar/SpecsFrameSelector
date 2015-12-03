@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Adapted to work with the getUserMedia API using code from http://wesbos.com/html5-video-face-detection-canvas-javascript/ -->
+	<head>
+		<meta charset="utf-8">
+		<title>Specs  Frame  Selector Using Web cam</title>
+		<style>
+				body {
+					font-family: sans-serif;
+					font-size: 17px;
+					line-height: 24px;
+					color: #fff;
+					width: 100%;
+					height: 100%;
+					margin: 0;
+					background:url('wallhaven-13691.jpg') /*-222px -152px;*/;
+				}
+
+					#info {	position: absolute;	padding: 2px;	background: red;margin-left: 50%; color: white;	width: auto;
+	height: auto;	margin-top: 5px;		box-shadow: 0px 0px 10px 2px #FFFFFF;}
+
+#output {	
+	width: auto;	height: 100%;	background: black;	float: left;	margin:5px 0 0  5px;	-webkit-transform: scale(-1, 1);
+	border:1px solid #626161;	border-radius:5px;	box-shadow: -1px 1px 10px -3px #FFFFFF;}
+#head{	position: absolute;	background: black;}
+
+
+#gallary{  width: auto;  color: #fff;  margin-top: 20px;  margin-left: 50%;}
+
+
+div.img {box-shadow: 0px 0px 60px 1px #fff;
+  border-radius: 50px 50px; background-image: -webkit-gradient( radial,49% 62, 58, 99 103, -4, from(rgba(230, 237, 241, 0)), to(rgba(230, 237, 241, 0.8)));   margin: 5px;    padding: 5px;      height: auto;    width: auto;    float: left;    text-align: center;}	
+
+div.img img {opacity: 0.95; transition: transform 0.35s; transform-origin: 50% 50%;   display: inline;    margin: 5px;     }
+div.img a:hover img {transform: scale3d(1.55,1.55,2);    }
+
+h1 {  font-size: 19px;  padding: 12px 25% 0 20px;  font-family: "Avenir", "Roboto", "Proxima Nova", "Helvetica";}
+.top-header {box-shadow:0px 0px 9px 1px #fff;border-bottom: 1px solid #0A0909;color: red;  background: whitesmoke;  height: 75px; margin-top:20px;     background-image: -webkit-linear-gradient(left,  orange,  orangered 25%,  skyblue 25%,
+    deepskyblue 50%,    firebrick 50%,    firebrick 75%,    green 75%);  
+  background-image: linear-gradient(to right,     orange,    orangered 25%,  skyblue 25%,   deepskyblue 50%,   firebrick 50%,   firebrick 75%,  green 75%);
+  background-size: 100% 6px;  background-position: 50% 100%;  background-repeat: no-repeat;
+}
+
+
+
+/*       for Button*/
+
+#pagegradient {  background-image: -webkit-gradient( radial,41% 157, 96, 244 143, 0, from(rgba(230, 237, 241, 0)), to(rgba(230, 237, 241, 0.8)));
+	  height:100%;  left:0px; position:absolute;  bottom:0;  width: 600px;}
+
+.button {    position: absolute;    top: 90%;    left: 8px;    display: inline-block;    margin: 0 auto;
+    
+    -webkit-border-radius: 10px;    
+    -webkit-box-shadow:         0px 3px rgba(128,128,128,1), /* gradient effects */
+        0px 4px rgba(118,118,118,1),
+        0px 5px rgba(108,108,108,1),
+        0px 6px rgba(98,98,98,1),
+        0px 7px rgba(88,88,88,1),
+        0px 8px rgba(78,78,78,1),
+        0px 14px 6px -1px rgba(128,128,128,1); /* shadow */
+    
+    -webkit-transition: -webkit-box-shadow .1s ease-in-out;
+} 
+
+.button span {    background-color: #E8E8E8;
+    
+    background-image: 
+        /* gloss gradient */
+        -webkit-gradient(
+            linear, 
+            left bottom, 
+            left top, 
+            color-stop(50%,rgba(255,255,255,0)), 
+            color-stop(50%,rgba(255,255,255,0.3)), 
+            color-stop(100%,rgba(255,255,255,0.2))),
+        
+        /* dark outside gradient */
+        -webkit-gradient(
+            linear, 
+            left top, 
+            right top, 
+            color-stop(0%,rgba(210,210,210,0.3)), 
+            color-stop(20%,rgba(210,210,210,0)), 
+            color-stop(80%,rgba(210,210,210,0)), 
+            color-stop(100%,rgba(210,210,210,0.3))),
+        
+        /* light inner gradient */
+        -webkit-gradient(
+            linear, 
+            left top, 
+            right top, 
+            color-stop(0%,rgba(255,255,255,0)), 
+            color-stop(20%,rgba(255,255,255,0.5)), 
+            color-stop(80%,rgba(255,255,255,0.5)), 
+            color-stop(100%,rgba(255,255,255,0))),        
+        
+        /* diagonal line pattern */
+        -webkit-gradient(
+            linear, 
+            0% 100%, 
+            100% 0%, 
+            color-stop(0%,rgba(255,255,255,0)), 
+            color-stop(40%,rgba(255,255,255,0)), 
+            color-stop(40%,#D2D2D1), 
+            color-stop(60%,#D2D2D1), 
+            color-stop(60%,rgba(255,255,255,0)), 
+            color-stop(100%,rgba(255,255,255,0)));
+    
+        -webkit-box-shadow:
+            0px -1px #fff, /* top highlight */
+            0px 1px 1px #FFFFFF; /* bottom edge */
+    
+    -webkit-background-size: 100%, 100%, 100%, 4px 4px;
+    
+    -webkit-border-radius: 10px;
+    -webkit-transition: -webkit-transform .1s ease-in-out;
+    
+    display: inline-block;
+    padding: 0px 24px 0px 40px;
+    
+    color: #3A474D;
+    text-transform: uppercase;
+    font-family: 'TradeGothicLTStd-BdCn20','PT Sans Narrow';
+    font-weight: 700;
+    font-size: 32px;
+    
+    text-shadow: 0px 1px #fff, 0px -1px #262F33;
+}
+
+        .button span:hover {
+            color: #F40F0F;
+            text-shadow: 0px -1px #97A63A;
+            cursor: pointer;
+        }
+
+        .button:active {
+            -webkit-box-shadow: 
+                0px 3px rgba(128,128,128,1),
+                0px 4px rgba(118,118,118,1),
+                0px 5px rgba(108,108,108,1),
+                0px 6px rgba(98,98,98,1),
+                0px 7px rgba(88,88,88,1),
+                0px 8px rgba(78,78,78,1),
+                0px 10px 2px 0px rgba(128,128,128,.6); /* shadow */
+        }
+
+        .button:active span{
+            -webkit-transform: translate(0, 5px); /* depth of button press */
+        }
+
+.button span:before{content: "<";
+
+ display: block;
+        width: 10px;
+        height: 10px;
+    
+        position: absolute;
+        left: 14px;
+        top: 5px;    
+        
+        font-family: 'Cabin';
+        font-weight: 700;
+        color: #F40F0F;
+        text-shadow: 0px 1px #fff, 0px -1px #97A63A;
+        font-size: 26px;
+
+        }
+    /*.button span:after {
+        content: ">";
+        display: block;
+        width: 10px;
+        height: 10px;
+    
+        position: absolute;
+        right: 14px;
+        top: 12px;    
+        
+        font-family: 'Cabin';
+        font-weight: 700;
+        color: #AEBF3B;
+        text-shadow: 0px 1px #fff, 0px -1px #97A63A;
+        font-size: 26px;
+    }*/
+
+
+
+
+/*end the style*/		</style>
+
+        <link rel="stylesheet" href="css/bootstrap.min.css">  
+        <link rel="stylesheet" href="css/animate.css">
+
+  <script src="js/jquery-1.7.1.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+	</head>
+	<body>
+
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">	<img src="img/footer-logo.png" alt="Specs Frame Selector" style="margin-top: -11px;">
+</a>
+    </div>
+    <div>
+      
+        
+        <p id="info">Please allow access to your camera!</p>
+      
+    </div>
+  </div>
+</nav>
+<header class="top-header">
+  
+  <h1 style="float:left;">Take a Look</h1><h1 style="float:right;">Pic a frame to try</h1>
+</header>
+		
+		<canvas id="output"></canvas>
+			<div id="gallary"> 
+<!--<header class="top-header">
+  <h1>Pic a frame to try</h1>
+</header>-->
+					<div class="img">
+
+ <a  href="#"><img src="noFrame2.png" id="noframe" alt="No Frame" width="130px" height="100px" onclick="noFrame()"></a>
+ <div class="desc">No Frame</div>
+</div>
+				<div class="img">
+ <a  href="#"><img src="reload.png" id="reload" alt="No Frame" width="130px" height="100px" onclick="location.reload();"></a>
+ <div class="desc">Reload Page</div>
+</div>
+<div class="img">
+ <a  href="#"><img src="frame1.png" id="f1" width="130px" height="100px" onclick="fsrc1()"></a>
+ <div class="desc">Frame1</div>
+</div>
+<div class="img">
+ <a  href="#"><img src="frame2.png" id="f2" class="frame" width="130px" height="100px" onclick="fsrc2()"></a>
+ <div class="desc">Frame 2</div>
+</div>
+<div class="img">
+ <a  href="#"><img src="frame3.png" id="f3" class="frame" width="130px" height="100px" onclick="fsrc3()"></a>
+ <div class="desc">Frame 3</div>
+</div>
+<div class="img">
+ <a  href="#"><img src="frame4.png" id="f4" class="frame"  width="130px" height="100px" onclick="fsrc4()"></a>
+ <div class="desc">Frame 4</div>
+</div>
+<div class="img">
+ <a  href="#"><img src="frame5.png" id="f5" class="frame" width="130px" height="100px" onclick="fsrc5()"></a>
+ <div class="desc">Frame 5</div>
+</div>
+<div class="img">
+ <a  href="#"><img src="frame6.png" id="f6" class="frame" width="130px" height="100px" onclick="fsrc6()"></a>
+ <div class="desc">Frame 6</div>
+</div>
+
+<div class="img">
+ <a  href="#"><img src="frame7.png" id="f7" class="frame" width="130px" height="100px" onclick="fsrc7()"></a>
+ <div class="desc">Frame 7</div>
+</div>
+
+<div class="img">
+ <a  href="#"><img src="frame8.png" id="f8" class="frame" width="130px" height="100px" onclick="fsrc8()"></a>
+ <div class="desc">Frame 8</div>
+</div>
+<div class="img">
+ <a  href="#"><img src="no.image.600x300.png" id="f8" class="frame" width="130px" height="100px" ></a>
+ <div class="desc">Frame 9</div>
+</div>
+<div class="img">
+ <a  href="#"><img src="no.image.600x300.png" id="f8" class="frame" width="130px" height="100px" ></a>
+ <div class="desc">Frame 10</div>
+</div>
+
+
+</div>
+</div>
+
+
+					<a  href="../index.html" class="button">
+						<span>Back</span>
+					</a>
+		<script src="ccv.js"></script>
+		<script src="face.js"></script>
+		<script>
+		//this is the code for stop
+
+
+function fstop() {
+    video.pause();
+video.src="";
+};
+
+//Script for changig the freme 
+
+		$(document).ready(function(){
+    	$(".frame").click(function(){
+    		var idx=this.id;//f3
+    		//alert(idx);//f3 
+var frameid = $(this).attr('id');
+
+    	$("#f1").attr("id", frameid);
+
+alert($("#f1").attr(src));
+
+        $("#f1").attr("id",idx);
+		$("idx").attr("id", f1);
+
+           });
+});
+
+
+
+
+var getSrc = function(imgSource) {
+    var img = new Image();
+    img = imgSource;
+    return img;
+};
+
+var src1 = $("#f1").attr("src");
+var src2 = $("#f2").attr("src");
+var src3 = $("#f3").attr("src");
+var src4 = $("#f4").attr("src");
+var src5 = $("#f5").attr("src");
+var src6 = $("#f6").attr("src");
+var src7 = $("#f7").attr("src");
+var src8 = $("#f8").attr("src");
+
+
+
+/*
+function toCelsius(f) {
+    return (5/9) * (f-32);
+}*/
+
+
+
+	
+function fstop() {
+    video.pause();
+video.src="";
+}
+
+// requestAnimationFrame shim
+(function() {
+
+
+
+	var i = 0,
+		lastTime = 0,
+		vendors = ['ms', 'moz', 'webkit', 'o'];
+	
+	while (i < vendors.length && !window.requestAnimationFrame) {
+		window.requestAnimationFrame = window[vendors[i] + 'RequestAnimationFrame'];
+		i++;
+	}
+	
+	if (!window.requestAnimationFrame) {
+		window.requestAnimationFrame = function(callback, element) {
+			var currTime = new Date().getTime(),
+				timeToCall = Math.max(0, 1000 / 60 - currTime + lastTime),
+				id = setTimeout(function() { callback(currTime + timeToCall); }, timeToCall);
+			
+			lastTime = currTime + timeToCall;
+			return id;
+		};
+	}
+}());
+
+var App = {
+	start: function(stream) {
+		App.video.addEventListener('canplay', function() {
+			App.video.removeEventListener('canplay');
+			setTimeout(function() {
+				App.video.play();
+				App.canvas.style.display = 'inline';
+				App.info.style.display = 'none';
+				App.canvas.width = App.video.videoWidth;
+				App.canvas.height = App.video.videoHeight;
+				App.backCanvas.width = App.video.videoWidth / 4;
+				App.backCanvas.height = App.video.videoHeight / 4;
+				App.backContext = App.backCanvas.getContext('2d');
+			
+				var w = 300 / 4 * 0.8,
+					h = 270 / 4 * 0.8;
+			
+				App.comp = [{
+					x: (App.video.videoWidth / 4 - w) / 2,
+					y: (App.video.videoHeight / 4 - h) / 2,
+					width: w, 
+					height: h,
+				}];
+			
+				App.drawToCanvas();
+			}, 500);
+		}, true);
+		
+		var domURL = window.URL || window.webkitURL;
+		App.video.src = domURL ? domURL.createObjectURL(stream) : stream;
+	},
+	denied: function() {
+		App.info.innerHTML = 'Camera access denied!<br>Please reload and try again.';
+	},
+	error: function(e) {
+		if (e) {
+			console.error(e);
+		}
+		App.info.innerHTML = 'Please go to about:flags in Google Chrome and enable the &quot;MediaStream&quot; flag.';
+	},
+	drawToCanvas: function() {
+		requestAnimationFrame(App.drawToCanvas);
+		
+		var video = App.video,
+			ctx = App.context,
+			backCtx = App.backContext,
+			m = 4,
+			w = 4,
+			i,
+			comp;
+		
+		ctx.drawImage(video, 0, 0, App.canvas.width, App.canvas.height);
+		
+		backCtx.drawImage(video, 0, 0, App.backCanvas.width, App.backCanvas.height);
+		
+		comp = ccv.detect_objects(App.ccv = App.ccv || {
+			canvas: App.backCanvas,
+			cascade: cascade,
+			interval: 4,
+			min_neighbors: 1
+		});
+		
+		if (comp.length) {
+			App.comp = comp;
+		}
+		
+		for (i = App.comp.length; i--; ) {
+			ctx.drawImage(App.glasses, (App.comp[i].x - w / 2) * m, (App.comp[i].y - w / 2) * m, (App.comp[i].width + w) * m, (App.comp[i].height + w) * m);
+		}
+	}
+};
+
+/*var y
+$(document).ready(function(){
+    $("#f1").on("click", function(){
+          window.globalVar =y;
+          y='frame3.png';
+    });
+});
+*/
+//twisting to put dynamic values into the code 
+
+function noFrame(){
+var x="";
+App.glasses.src = x;
+}
+function fsrc1(){
+var x=getSrc(src1);
+App.glasses.src = x;
+}
+
+function fsrc2(){
+var x=getSrc(src2);
+App.glasses.src = x;
+}
+
+function fsrc3(){
+var x=getSrc(src3);
+App.glasses.src = x;
+}
+
+function fsrc4(){
+var x=getSrc(src4);
+App.glasses.src = x;
+}
+
+function fsrc5(){
+var x=getSrc(src5);
+App.glasses.src = x;
+}
+
+function fsrc6(){
+var x=getSrc(src6);
+App.glasses.src = x;
+}
+function fsrc7(){
+var x=getSrc(src7);
+App.glasses.src = x;
+}
+function fsrc8(){
+var x=getSrc(src8);
+App.glasses.src = x;
+}
+function fsrc9(){
+var x=getSrc(src9);
+App.glasses.src = x;
+}
+
+
+
+App.glasses = new Image();
+    
+   /* var x = document.getElementById("f5").src;*/
+
+
+
+App.init = function() {
+	App.video = document.createElement('video');
+	App.backCanvas = document.createElement('canvas');
+	App.canvas = document.querySelector('#output');
+	App.canvas.style.display = 'none';
+	App.context = App.canvas.getContext('2d');
+	App.info = document.querySelector('#info');
+	
+	navigator.getUserMedia_ = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+	
+	try {
+		navigator.getUserMedia_({
+			video: true,
+			audio: false
+		}, App.start, App.denied);
+	} catch (e) {
+		try {
+			navigator.getUserMedia_('video', App.start, App.denied);
+		} catch (e) {
+			App.error(e);
+		}
+	}
+	
+	App.video.loop = App.video.muted = true;
+	App.video.load();
+};
+
+App.init();
+
+</script>
+
+
+	</body>
+</html>
