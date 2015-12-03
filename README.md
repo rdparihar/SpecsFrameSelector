@@ -1,0 +1,2 @@
+# SpecsFrameSelector
+People often wears specs, people often purchase specs. Processes of purchasing start by   going to shop and selecting appropriate frame of specs by trying one by one. To try buyer   pics a frame from the set of chosen frame and looks into the mirror and this process   repeated until buyer satisfied. But the world where shops are confined to the computer   screen and shopping take place at just one click. In this modern circumstances trying   before buying is not as simple as it is in real world.
